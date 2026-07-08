@@ -1,10 +1,10 @@
 const CACHE_NAME = 'jysk-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/data/catalog.js'
+  './',
+  'index.html',
+  'styles.css',
+  'app.js',
+  'data/catalog.js'
 ];
 
 self.addEventListener('install', event => {

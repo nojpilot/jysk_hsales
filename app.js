@@ -92,7 +92,9 @@ const elements = canRenderApp
   : {};
 
 function init() {
-  elements.metricProducts.textContent = catalog.filter((product) => product.type !== "cover").length.toString();
+  if (elements.metricProducts) {
+    elements.metricProducts.textContent = catalog.filter((product) => product.type !== "cover").length.toString();
+  }
   renderControls();
   bindEvents();
   render();
