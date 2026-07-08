@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#143c8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JYSK Buddy">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23143c8a' width='180' height='180' rx='40'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='130' width='180' height='50' fill='%23ffd43b'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23143c8a' width='180' height='180' rx='40'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='130' width='180' height='50' fill='%23ffd43b'/></svg>">
+    <title>JYSK prodejní asistent</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div>
+            <p class="brand-kicker">JYSK</p>
+            <h1>Vinohradský buddy</h1>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="filters" aria-label="Filtry katalogu">
+          <div class="control-block search-control">
+            <label class="search-box">
+              <span>Rychlé hledání</span>
+              <input id="searchInput" type="search" autocomplete="off" placeholder="název, SKU, paměť, batist">
+            </label>
+          </div>
+          <div class="control-block">
+            <span class="control-label">Typ</span>
+            <div class="segmented" id="typeTabs"></div>
+          </div>
+          <div class="control-block">
+            <span class="control-label">Třída</span>
+            <div class="segmented segmented-quality" id="qualityTabs"></div>
+          </div>
+          <div class="control-block customer-block">
+            <span class="control-label">Zákazník</span>
+            <div class="mini-controls">
+              <label>
+                <span>Poloha</span>
+                <select id="sleepSelect">
+                  <option value="side">Bok</option>
+                  <option value="back">Záda</option>
+                  <option value="stomach">Břicho</option>
+                </select>
+              </label>
+              <label>
+                <span>Polštář</span>
+                <select id="pillowFamilySelect">
+                  <option value="classic">Klasický</option>
+                  <option value="memory">Paměťová pěna</option>
+                  <option value="all">Bez rozdílu</option>
+                </select>
+              </label>
+              <label>
+                <span>Teplo</span>
+                <select id="warmthSelect">
+                  <option value="warm">Teplá</option>
+                  <option value="cool">Chladivá</option>
+                  <option value="extra">Extra teplá</option>
+                </select>
+              </label>
+              <label class="toggle">
+                <input id="allergyToggle" type="checkbox">
+                <span>Alergie</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <section class="catalog-panel" aria-label="Seznam produktů">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Katalog</p>
+                <h2 id="catalogTitle">Produkty</h2>
+                <p class="result-count" id="catalogCount">0 položek</p>
+              </div>
+            </div>
+            <div class="quick-filter-strip" id="quickFilters" aria-label="Rychlé filtry"></div>
+            <div class="product-list" id="productList"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="data/catalog.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

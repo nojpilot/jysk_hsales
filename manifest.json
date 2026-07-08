@@ -1,0 +1,33 @@
+{
+  "name": "JYSK Prodejní Asistent",
+  "short_name": "JYSK Buddy",
+  "description": "Prodejní asistent pro produkty JYSK",
+  "start_url": "/jysk_hsales/",
+  "scope": "/jysk_hsales/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#143c8a",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23143c8a' width='192' height='192' rx='45'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='110' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='138' width='192' height='54' fill='%23ffd43b'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%23143c8a' width='512' height='512' rx='120'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='290' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='368' width='512' height='144' fill='%23ffd43b'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23f4f7fb' width='540' height='720'/><rect fill='%23143c8a' width='540' height='60'/><text x='20' y='35' font-size='24' font-weight='800' fill='white'>JYSK</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ]
+}
