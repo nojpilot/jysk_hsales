@@ -222,15 +222,6 @@ function renderProductList() {
       toggleProductPanel(button.dataset.saleProduct, "sales");
     });
   });
-
-  elements.productList.querySelectorAll("[data-detail-mode]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.selectedId = button.dataset.productId;
-      state.expandedId = button.dataset.productId;
-      state.panelMode = button.dataset.detailMode;
-      renderProductList();
-    });
-  });
 }
 
 function toggleProductPanel(productId, panelMode) {
@@ -281,8 +272,7 @@ function expandedProductPanel(product) {
   return `
     <div class="inline-panel">
       <div class="inline-panel-head">
-        ${detailModeTabs(panelMode, product.id)}
-        <div class="detail-tags">
+        <div class="detail-tags" style="margin-top: 0;">
           <span class="tag">${product.typeLabel}</span>
           <span class="tag">SKU ${product.sku}</span>
           ${sourceLink(product)}
@@ -298,15 +288,6 @@ function expandedProductPanel(product) {
 
 function infoRow(label, value) {
   return `<div class="info-row"><dt>${label}</dt><dd>${value}</dd></div>`;
-}
-
-function detailModeTabs(panelMode, productId) {
-  return `
-    <div class="detail-mode-tabs" role="group" aria-label="Režim panelu">
-      <button type="button" data-product-id="${productId}" data-detail-mode="detail" aria-pressed="${panelMode === "detail" ? "true" : "false"}">Detail</button>
-      <button type="button" data-product-id="${productId}" data-detail-mode="sales" aria-pressed="${panelMode === "sales" ? "true" : "false"}">Doplňkový prodej</button>
-    </div>
-  `;
 }
 
 function productInfoBody(product, coverPros) {
