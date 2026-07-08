@@ -72,6 +72,13 @@ const state = {
   search: "",
   selectedId: null,
   expandedId: null,
+  
+  // New redesign state
+  compareIds: [],
+  isWizardOpen: false,
+  wizardStep: 0,
+  wizardAnswers: {},
+  isMobileFiltersOpen: false,
 };
 
 const elements = canRenderApp
@@ -88,6 +95,30 @@ const elements = canRenderApp
       catalogCount: document.querySelector("#catalogCount"),
       quickFilters: document.querySelector("#quickFilters"),
       metricProducts: document.querySelector("#metricProducts"),
+      
+      // Wizard elements
+      startWizardBtn: document.querySelector("#startWizardBtn"),
+      closeWizardBtn: document.querySelector("#closeWizardBtn"),
+      wizardModal: document.querySelector("#wizardModal"),
+      wizardStepContent: document.querySelector("#wizardStepContent"),
+      wizardBackBtn: document.querySelector("#wizardBackBtn"),
+      wizardNextBtn: document.querySelector("#wizardNextBtn"),
+      wizardProgress: document.querySelector("#wizardProgress"),
+      
+      // Comparison elements
+      closeCompareBtn: document.querySelector("#closeCompareBtn"),
+      compareModal: document.querySelector("#compareModal"),
+      compareTable: document.querySelector("#compareTable"),
+      compareBar: document.querySelector("#compareBar"),
+      compareCountText: document.querySelector("#compareCountText"),
+      clearCompareBtn: document.querySelector("#clearCompareBtn"),
+      startCompareBtn: document.querySelector("#startCompareBtn"),
+      
+      // Reset & Mobile Drawer elements
+      resetFiltersBtn: document.querySelector("#resetFiltersBtn"),
+      mobileFilterToggle: document.querySelector("#mobileFilterToggle"),
+      filtersSection: document.querySelector("#filtersSection"),
+      filtersBackdrop: document.querySelector("#filtersBackdrop"),
     }
   : {};
 
@@ -129,6 +160,88 @@ function bindEvents() {
     selectFirstVisibleProduct();
     render();
   });
+
+  // Reset Filters Button
+  if (elements.resetFiltersBtn) {
+    elements.resetFiltersBtn.addEventListener("click", () => {
+      resetFilters();
+    });
+  }
+
+  // Mobile Filter Drawer Toggle
+  if (elements.mobileFilterToggle) {
+    elements.mobileFilterToggle.addEventListener("click", () => {
+      state.isMobileFiltersOpen = true;
+      renderMobileFilters();
+    });
+  }
+
+  if (elements.filtersBackdrop) {
+    elements.filtersBackdrop.addEventListener("click", () => {
+      state.isMobileFiltersOpen = false;
+      renderMobileFilters();
+    });
+  }
+
+  // Sales Wizard Modals Trigger
+  if (elements.startWizardBtn) {
+    elements.startWizardBtn.addEventListener("click", () => {
+      openWizard();
+    });
+  }
+
+  if (elements.closeWizardBtn) {
+    elements.closeWizardBtn.addEventListener("click", () => {
+      closeWizard();
+    });
+  }
+
+  if (elements.wizardBackBtn) {
+    elements.wizardBackBtn.addEventListener("click", () => {
+      navigateWizard(-1);
+    });
+  }
+
+  if (elements.wizardNextBtn) {
+    elements.wizardNextBtn.addEventListener("click", () => {
+      navigateWizard(1);
+    });
+  }
+
+  // Product Comparison Modals Trigger
+  if (elements.closeCompareBtn) {
+    elements.closeCompareBtn.addEventListener("click", () => {
+      closeCompareModal();
+    });
+  }
+
+  if (elements.clearCompareBtn) {
+    elements.clearCompareBtn.addEventListener("click", () => {
+      clearCompareList();
+    });
+  }
+
+  if (elements.startCompareBtn) {
+    elements.startCompareBtn.addEventListener("click", () => {
+      openCompareModal();
+    });
+  }
+
+  // Event delegation on product list for checkboxes and copy buttons
+  if (elements.productList) {
+    elements.productList.addEventListener("change", (event) => {
+      if (event.target.matches("input[data-compare-id]")) {
+        toggleCompareProduct(event.target.dataset.compareId);
+      }
+    });
+
+    elements.productList.addEventListener("click", (event) => {
+      const copyBtn = event.target.closest(".copy-sku-btn");
+      if (copyBtn) {
+        copySkuToClipboard(copyBtn.dataset.copySku, copyBtn);
+      }
+    });
+  }
 }
 
 function renderControls() {
@@ -171,6 +284,8 @@ function controlButton(label, pressed, attributes) {
 function render() {
   renderControls();
   renderProductList();
+  renderMobileFilters();
+  renderCompareBar();
 }
 
 function visibleProducts() {
@@ -236,8 +351,15 @@ function productCard(product) {
   const selected = product.id === state.expandedId ? " is-selected" : "";
   const isDetailOpen = product.id === state.expandedId && state.panelMode === "detail";
   const isSalesOpen = product.id === state.expandedId && state.panelMode === "sales";
+  const isCompared = state.compareIds.includes(product.id);
+  const compareChecked = isCompared ? "checked" : "";
+
   return `
-    <article class="product-card${selected}">
+    <article class="product-card${selected} card-${product.quality.toLowerCase()}">
+      <label class="compare-checkbox" onclick="event.stopPropagation();">
+        <input type="checkbox" data-compare-id="${product.id}" ${compareChecked}>
+        <span>Srovnat</span>
+      </label>
       <div class="product-main">
         <div class="product-title-row">
           <h3>${product.name}</h3>
@@ -274,7 +396,10 @@ function expandedProductPanel(product) {
       <div class="inline-panel-head">
         <div class="detail-tags" style="margin-top: 0;">
           <span class="tag">${product.typeLabel}</span>
-          <span class="tag">SKU ${product.sku}</span>
+          <span class="tag sku-container">
+            SKU ${product.sku}
+            <button class="copy-sku-btn" data-copy-sku="${product.sku}">Kopírovat</button>
+          </span>
           ${sourceLink(product)}
         </div>
       </div>
@@ -698,6 +823,345 @@ function ruleNote(note) {
 function sourceLink(product) {
   if (!product.sourceUrl) return "";
   return `<a class="source-link" href="${product.sourceUrl}" target="_blank" rel="noreferrer">Zdroj JYSK</a>`;
+}
+
+function resetFilters() {
+  state.type = "pillow";
+  state.quality = "BASIC";
+  state.sleep = "side";
+  state.warmth = "warm";
+  state.allergy = false;
+  state.pillowFamily = "classic";
+  state.quickFilter = "all";
+  state.search = "";
+  state.selectedId = null;
+  state.expandedId = null;
+  state.compareIds = [];
+
+  // Reset inputs visually
+  if (elements.sleepSelect) elements.sleepSelect.value = "side";
+  if (elements.pillowFamilySelect) elements.pillowFamilySelect.value = "classic";
+  if (elements.warmthSelect) elements.warmthSelect.value = "warm";
+  if (elements.allergyToggle) elements.allergyToggle.checked = false;
+  if (elements.searchInput) elements.searchInput.value = "";
+
+  render();
+}
+
+function renderMobileFilters() {
+  if (elements.filtersSection && elements.filtersBackdrop) {
+    if (state.isMobileFiltersOpen) {
+      elements.filtersSection.classList.add("is-open");
+      elements.filtersBackdrop.classList.add("is-visible");
+    } else {
+      elements.filtersSection.classList.remove("is-open");
+      elements.filtersBackdrop.classList.remove("is-visible");
+    }
+  }
+}
+
+function toggleCompareProduct(productId) {
+  const index = state.compareIds.indexOf(productId);
+  if (index > -1) {
+    state.compareIds.splice(index, 1);
+  } else {
+    if (state.compareIds.length >= 3) {
+      alert("Můžete porovnávat maximálně 3 produkty najednou.");
+      renderProductList();
+      return;
+    }
+    state.compareIds.push(productId);
+  }
+  render();
+}
+
+function clearCompareList() {
+  state.compareIds = [];
+  render();
+}
+
+function renderCompareBar() {
+  if (!elements.compareBar) return;
+  const count = state.compareIds.length;
+  if (count > 0) {
+    elements.compareBar.removeAttribute("aria-hidden");
+    if (elements.compareCountText) {
+      elements.compareCountText.textContent = `Vybráno k porovnání: ${count} ${count === 1 ? 'produkt' : count < 5 ? 'produkty' : 'produktů'} (max 3)`;
+    }
+  } else {
+    elements.compareBar.setAttribute("aria-hidden", "true");
+  }
+}
+
+function openCompareModal() {
+  if (state.compareIds.length === 0) return;
+  state.isCompareOpen = true;
+  if (elements.compareModal) {
+    elements.compareModal.removeAttribute("aria-hidden");
+  }
+  renderCompareTable();
+}
+
+function closeCompareModal() {
+  state.isCompareOpen = false;
+  if (elements.compareModal) {
+    elements.compareModal.setAttribute("aria-hidden", "true");
+  }
+}
+
+function renderCompareTable() {
+  if (!elements.compareTable) return;
+  const products = catalog.filter((p) => state.compareIds.includes(p.id));
+  if (products.length === 0) {
+    closeCompareModal();
+    return;
+  }
+
+  const headerRow = `
+    <tr>
+      <th>Vlastnost</th>
+      ${products.map(p => `
+        <td>
+          <div class="compare-product-header">
+            <h4>${p.name}</h4>
+            ${qualityBadge(p.quality)}
+            <div>
+              <button class="remove-compare-item" data-remove-id="${p.id}">Odstranit</button>
+            </div>
+          </div>
+        </td>
+      `).join("")}
+    </tr>
+  `;
+
+  const specs = [
+    { key: "typeLabel", label: "Typ" },
+    { key: "sku", label: "SKU" },
+    { key: "size", label: "Rozměry" },
+    { key: "height", label: "Výška / Hřejivost", custom: p => p.warmth || p.height || "-" },
+    { key: "filling", label: "Náplň" },
+    { key: "cover", label: "Potah" },
+    { key: "description", label: "Popis" }
+  ];
+
+  const specRows = specs.map(spec => `
+    <tr>
+      <th>${spec.label}</th>
+      ${products.map(p => `
+        <td>${spec.custom ? spec.custom(p) : (p[spec.key] || "-")}</td>
+      `).join("")}
+    </tr>
+  `).join("");
+
+  elements.compareTable.innerHTML = `<thead>${headerRow}</thead><tbody>${specRows}</tbody>`;
+
+  // Bind delete buttons inside comparison table
+  elements.compareTable.querySelectorAll(".remove-compare-item").forEach(btn => {
+    btn.addEventListener("click", () => {
+      toggleCompareProduct(btn.dataset.removeId);
+      renderCompareTable();
+    });
+  });
+}
+
+function copySkuToClipboard(sku, buttonElement) {
+  if (!navigator.clipboard) {
+    const textArea = document.createElement("textarea");
+    textArea.value = sku;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand("copy");
+      showCopyFeedback(buttonElement);
+    } catch (err) {
+      console.error("Fallback copy failed", err);
+    }
+    document.body.removeChild(textArea);
+    return;
+  }
+  navigator.clipboard.writeText(sku).then(() => {
+    showCopyFeedback(buttonElement);
+  }, (err) => {
+    console.error("Chyba při kopírování SKU: ", err);
+  });
+}
+
+function showCopyFeedback(btn) {
+  const existing = btn.querySelector(".copy-feedback");
+  if (existing) existing.remove();
+  
+  const feedback = document.createElement("span");
+  feedback.className = "copy-feedback";
+  feedback.textContent = "Zkopírováno!";
+  btn.appendChild(feedback);
+  
+  setTimeout(() => {
+    feedback.remove();
+  }, 1000);
+}
+
+const wizardSteps = [
+  {
+    question: "Který produkt hledáte?",
+    key: "type",
+    options: [
+      { value: "pillow", label: "Polštář", desc: "Podpora krční páteře" },
+      { value: "blanket", label: "Přikrývka", desc: "Tepelný komfort během noci" },
+      { value: "set", label: "Set", desc: "Zvýhodněná sada polštáře a přikrývky" }
+    ]
+  },
+  {
+    question: "Jakou kvalitativní řadu preferujete?",
+    key: "quality",
+    options: [
+      { value: "all", label: "Nezáleží mi na tom", desc: "Zobrazit všechny řady" },
+      { value: "BASIC", label: "BASIC", desc: "Dostupná kvalita za skvělou cenu" },
+      { value: "PLUS", label: "PLUS", desc: "Kvalitní produkty s delší zárukou" },
+      { value: "GOLD", label: "GOLD", desc: "Špičkové materiály a maximální komfort" }
+    ]
+  },
+  {
+    question: "V jaké poloze nejraději spíte? (pouze pro polštáře)",
+    key: "sleep",
+    condition: answers => answers.type === "pillow" || answers.type === "set",
+    options: [
+      { value: "side", label: "Na boku", desc: "Potřebujete vyšší a pevnější polštář" },
+      { value: "back", label: "Na zádech", desc: "Středně vysoký polštář pro oporu hlavy" },
+      { value: "stomach", label: "Na břiše", desc: "Nízký a měkký polštář, aby se neprohýbal krk" }
+    ]
+  },
+  {
+    question: "Hledáte spíše hřejivější nebo chladnější přikrývku?",
+    key: "warmth",
+    condition: answers => answers.type === "blanket" || answers.type === "set",
+    options: [
+      { value: "cool", label: "Chladivá", desc: "Na léto nebo pro ty, kterým bývá horko" },
+      { value: "warm", label: "Teplá", desc: "Standardní celoroční hřejivost" },
+      { value: "extraWarm", label: "Extra teplá", desc: "Na zimu nebo pro zimomřivé lidi" }
+    ]
+  },
+  {
+    question: "Má zákazník alergie nebo citlivou pokožku?",
+    key: "allergy",
+    options: [
+      { value: "yes", label: "Ano", desc: "Doporučit syntetické nebo vyvařovací produkty" },
+      { value: "no", label: "Ne", desc: "Všechny produkty jsou vhodné" }
+    ]
+  }
+];
+
+function openWizard() {
+  state.isWizardOpen = true;
+  state.wizardStep = 0;
+  state.wizardAnswers = {
+    type: state.type,
+    quality: state.quality,
+    sleep: state.sleep,
+    warmth: state.warmth,
+    allergy: state.allergy ? "yes" : "no"
+  };
+  if (elements.wizardModal) {
+    elements.wizardModal.removeAttribute("aria-hidden");
+  }
+  renderWizardStep();
+}
+
+function closeWizard() {
+  state.isWizardOpen = false;
+  if (elements.wizardModal) {
+    elements.wizardModal.setAttribute("aria-hidden", "true");
+  }
+}
+
+function getActiveWizardSteps() {
+  return wizardSteps.filter(step => !step.condition || step.condition(state.wizardAnswers));
+}
+
+function renderWizardStep() {
+  const activeSteps = getActiveWizardSteps();
+  const stepData = activeSteps[state.wizardStep];
+  if (!stepData) return;
+
+  if (elements.wizardProgress) {
+    const progress = ((state.wizardStep + 1) / activeSteps.length) * 100;
+    elements.wizardProgress.style.width = `${progress}%`;
+  }
+
+  if (elements.wizardBackBtn) {
+    if (state.wizardStep === 0) {
+      elements.wizardBackBtn.style.visibility = "hidden";
+    } else {
+      elements.wizardBackBtn.style.visibility = "visible";
+    }
+  }
+
+  if (elements.wizardNextBtn) {
+    if (state.wizardStep === activeSteps.length - 1) {
+      elements.wizardNextBtn.textContent = "Dokončit a filtrovat";
+    } else {
+      elements.wizardNextBtn.textContent = "Pokračovat";
+    }
+  }
+
+  const optionsHtml = stepData.options.map(opt => {
+    const isSelected = state.wizardAnswers[stepData.key] === opt.value ? " is-selected" : "";
+    return `
+      <div class="wizard-option-card${isSelected}" data-wizard-value="${opt.value}">
+        <strong>${opt.label}</strong>
+        <span>${opt.desc}</span>
+      </div>
+    `;
+  }).join("");
+
+  if (elements.wizardStepContent) {
+    elements.wizardStepContent.innerHTML = `
+      <p class="wizard-question">${stepData.question}</p>
+      <div class="wizard-options-grid">
+        ${optionsHtml}
+      </div>
+    `;
+
+    elements.wizardStepContent.querySelectorAll(".wizard-option-card").forEach(card => {
+      card.addEventListener("click", () => {
+        state.wizardAnswers[stepData.key] = card.dataset.wizardValue;
+        renderWizardStep();
+      });
+    });
+  }
+}
+
+function navigateWizard(direction) {
+  const activeSteps = getActiveWizardSteps();
+  const nextIndex = state.wizardStep + direction;
+  
+  if (nextIndex < 0) return;
+  if (nextIndex >= activeSteps.length) {
+    applyWizardResults();
+    return;
+  }
+  
+  state.wizardStep = nextIndex;
+  renderWizardStep();
+}
+
+function applyWizardResults() {
+  const answers = state.wizardAnswers;
+  state.type = answers.type;
+  state.quality = answers.quality;
+  if (answers.type === "pillow" || answers.type === "set") {
+    state.sleep = answers.sleep;
+    if (elements.sleepSelect) elements.sleepSelect.value = answers.sleep;
+  }
+  if (answers.type === "blanket" || answers.type === "set") {
+    state.warmth = answers.warmth;
+    if (elements.warmthSelect) elements.warmthSelect.value = answers.warmth;
+  }
+  state.allergy = answers.allergy === "yes";
+  if (elements.allergyToggle) elements.allergyToggle.checked = state.allergy;
+  
+  selectFirstVisibleProduct();
+  closeWizard();
+  render();
 }
 
 if (canRenderApp) {

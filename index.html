@@ -11,6 +11,9 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23143c8a' width='180' height='180' rx='40'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='130' width='180' height='50' fill='%23ffd43b'/></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23143c8a' width='180' height='180' rx='40'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='130' width='180' height='50' fill='%23ffd43b'/></svg>">
     <title>JYSK prodejní asistent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -22,10 +25,32 @@
             <h1>Vinohradský buddy</h1>
           </div>
         </div>
+        <div class="topbar-actions">
+          <button id="startWizardBtn" type="button" class="wizard-btn">
+            <svg class="wizard-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.982-11.795H13.5l1.5-6.75L6 14.25h4.813z"/>
+            </svg>
+            Průvodce výběrem
+          </button>
+        </div>
       </header>
 
       <main>
-        <section class="filters" aria-label="Filtry katalogu">
+        <!-- Mobile FAB to open filters drawer -->
+        <button id="mobileFilterToggle" class="mobile-filter-fab" type="button" aria-label="Otevřít filtry">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.874c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
+          </svg>
+          Filtrovat
+        </button>
+
+        <div id="filtersBackdrop" class="filters-backdrop"></div>
+
+        <section id="filtersSection" class="filters" aria-label="Filtry katalogu">
+          <div class="filters-top-bar">
+            <span class="control-label">Parametry</span>
+            <button id="resetFiltersBtn" type="button" class="reset-btn">Resetovat vše</button>
+          </div>
           <div class="control-block search-control">
             <label class="search-box">
               <span>Rychlé hledání</span>
@@ -89,6 +114,54 @@
           </section>
         </section>
       </main>
+    </div>
+
+    <!-- Wizard Modal Overlay -->
+    <div id="wizardModal" class="modal-overlay" aria-hidden="true">
+      <div class="modal-content wizard-modal">
+        <button class="modal-close" id="closeWizardBtn" aria-label="Zavřít průvodce">&times;</button>
+        <div class="wizard-header">
+          <p class="eyebrow">Inteligentní Asistent</p>
+          <h2>Průvodce výběrem</h2>
+          <div class="wizard-progress-bar"><div id="wizardProgress" style="width: 25%;"></div></div>
+        </div>
+        <div id="wizardStepContent" class="wizard-body">
+          <!-- Steps will be injected dynamically -->
+        </div>
+        <div class="wizard-footer">
+          <button id="wizardBackBtn" class="secondary-button">Zpět</button>
+          <button id="wizardNextBtn" class="action-button">Pokračovat</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compare Modal Overlay -->
+    <div id="compareModal" class="modal-overlay" aria-hidden="true">
+      <div class="modal-content compare-modal">
+        <button class="modal-close" id="closeCompareBtn" aria-label="Zavřít porovnání">&times;</button>
+        <div class="compare-header">
+          <p class="eyebrow">Porovnání produktů</p>
+          <h2>Srovnání parametrů</h2>
+        </div>
+        <div class="compare-body">
+          <div class="table-responsive">
+            <table id="compareTable">
+              <!-- Injected dynamically -->
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Compare Bar -->
+    <div id="compareBar" class="compare-bar" aria-hidden="true">
+      <div class="compare-bar-content">
+        <span id="compareCountText">Vybráno k porovnání: 0 produktů (max 3)</span>
+        <div class="compare-bar-actions">
+          <button id="clearCompareBtn" class="secondary-button">Zrušit</button>
+          <button id="startCompareBtn" class="action-button">Srovnat parametry</button>
+        </div>
+      </div>
     </div>
 
     <script src="data/catalog.js"></script>
