@@ -310,7 +310,7 @@ function renderProductList() {
   const products = visibleProducts();
   const typeLabel = productTypes.find((type) => type.id === state.type)?.label || "Produkty";
   elements.catalogTitle.textContent = state.quality === "all" ? typeLabel : `${typeLabel} ${state.quality}`;
-  elements.catalogCount.textContent = formatResultCount(products.length);
+  elements.catalogCount.textContent = `(${formatResultCount(products.length)})`;
 
   if (!products.length) {
     elements.productList.innerHTML = `<div class="empty-state">Žádný produkt neodpovídá filtrům.</div>`;
@@ -347,6 +347,8 @@ function toggleProductPanel(productId, panelMode) {
   renderProductList();
 }
 
+
+
 function productCard(product) {
   const selected = product.id === state.expandedId ? " is-selected" : "";
   const isDetailOpen = product.id === state.expandedId && state.panelMode === "detail";
@@ -356,30 +358,34 @@ function productCard(product) {
 
   return `
     <article class="product-card${selected} card-${product.quality.toLowerCase()}">
-      <label class="compare-checkbox" onclick="event.stopPropagation();">
-        <input type="checkbox" data-compare-id="${product.id}" ${compareChecked}>
-        <span>Srovnat</span>
-      </label>
-      <div class="product-main">
-        <div class="product-title-row">
-          <h3>${product.name}</h3>
-          ${qualityBadge(product.quality)}
-        </div>
-        <p class="product-subtitle">${product.description}</p>
-        <div class="product-chips">
-          ${productChips(product).map((chip) => `<span>${chip}</span>`).join("")}
-        </div>
-        <div class="spec-grid">
-          ${smallSpec("Rozměr", product.size)}
-          ${smallSpec(product.type === "blanket" ? "Hřejivost" : "Výška", product.warmth || product.height || "-")}
-          ${smallSpec("Náplň", product.filling)}
-          ${smallSpec("Potah", product.cover)}
-        </div>
-        <div class="card-actions">
-          <button class="secondary-button" type="button" data-select-product="${product.id}" aria-expanded="${isDetailOpen ? "true" : "false"}" aria-pressed="${isDetailOpen ? "true" : "false"}">Detail</button>
-          <button class="action-button" type="button" data-sale-product="${product.id}" aria-expanded="${isSalesOpen ? "true" : "false"}" aria-pressed="${isSalesOpen ? "true" : "false"}">Doplňkový prodej</button>
+      <div class="product-header-row">
+        <div class="product-header-details">
+          <div class="product-title-line">
+            <div class="title-left">
+              <h3>${product.name}</h3>
+            </div>
+            <label class="compare-checkbox" onclick="event.stopPropagation();">
+              <input type="checkbox" data-compare-id="${product.id}" ${compareChecked}>
+              <span>Srovnat</span>
+            </label>
+          </div>
+          <p class="product-subtitle">${product.filling || ""}, ${product.size}</p>
+          <p class="product-spec-row">${product.type === "blanket" ? "Hřejivost" : "Výška"}: ${product.warmth || product.height || "-"}</p>
         </div>
       </div>
+      
+      <div class="card-actions">
+        <button class="action-button" type="button" data-sale-product="${product.id}" aria-expanded="${isSalesOpen ? "true" : "false"}" aria-pressed="${isSalesOpen ? "true" : "false"}">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right: 8px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-10.5m0 0H9m5.25 0v4.5m-10.5 4.5V18m0-10.5L14.25 18M18 18h-4.5m0 0v-4.5" />
+          </svg>
+          NAVRHNOUT UP-SELL & CROSS-SELL
+        </button>
+        <button class="secondary-button" type="button" data-select-product="${product.id}" aria-expanded="${isDetailOpen ? "true" : "false"}" aria-pressed="${isDetailOpen ? "true" : "false"}">
+          VÍCE INFORMACÍ A RADY
+        </button>
+      </div>
+
       ${product.id === state.expandedId ? expandedProductPanel(product) : ""}
     </article>
   `;
@@ -590,27 +596,52 @@ function scoreRecommendation(selected, candidate) {
 }
 
 function renderQuickFilters() {
-  const options = activeQuickFilters();
-  if (!options.some((option) => option.id === state.quickFilter)) {
+  const options = activeQuickFilters().filter((option) => option.id !== "all");
+  if (!activeQuickFilters().some((option) => option.id === state.quickFilter)) {
     state.quickFilter = "all";
   }
 
-  elements.quickFilters.innerHTML = options
+  let htmlContent = options
     .map((option) => {
-      const count = quickFilterCount(option.id);
-      return `<button type="button" data-quick-filter="${option.id}" aria-pressed="${state.quickFilter === option.id ? "true" : "false"}">${option.label}<span>${count}</span></button>`;
+      return `<button type="button" data-quick-filter="${option.id}" aria-pressed="${state.quickFilter === option.id ? "true" : "false"}">${option.label}</button>`;
     })
     .join("");
 
-  elements.quickFilters.querySelectorAll("button").forEach((button) => {
+  // Add the inline Zobrazit Filtry button at the end
+  htmlContent += `
+    <button type="button" id="inlineFilterBtn" class="inline-filter-btn">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right: 4px;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.874c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
+      </svg>
+      Zobrazit Filtry
+    </button>
+  `;
+
+  elements.quickFilters.innerHTML = htmlContent;
+
+  elements.quickFilters.querySelectorAll("button[data-quick-filter]").forEach((button) => {
     button.addEventListener("click", () => {
-      state.quickFilter = button.dataset.quickFilter;
-      if (state.quickFilter === "memory") state.pillowFamily = "memory";
-      if (state.quickFilter === "classicPillow") state.pillowFamily = "classic";
+      const targetFilter = button.dataset.quickFilter;
+      if (state.quickFilter === targetFilter) {
+        state.quickFilter = "all";
+        state.pillowFamily = "all";
+      } else {
+        state.quickFilter = targetFilter;
+        if (state.quickFilter === "memory") state.pillowFamily = "memory";
+        if (state.quickFilter === "classicPillow") state.pillowFamily = "classic";
+      }
       selectFirstVisibleProduct();
       render();
     });
   });
+
+  const inlineFilterBtn = elements.quickFilters.querySelector("#inlineFilterBtn");
+  if (inlineFilterBtn) {
+    inlineFilterBtn.addEventListener("click", () => {
+      state.isMobileFiltersOpen = true;
+      render();
+    });
+  }
 }
 
 function activeQuickFilters() {
@@ -885,11 +916,13 @@ function renderCompareBar() {
   const count = state.compareIds.length;
   if (count > 0) {
     elements.compareBar.removeAttribute("aria-hidden");
+    document.body.classList.add("compare-bar-active");
     if (elements.compareCountText) {
       elements.compareCountText.textContent = `Vybráno k porovnání: ${count} ${count === 1 ? 'produkt' : count < 5 ? 'produkty' : 'produktů'} (max 3)`;
     }
   } else {
     elements.compareBar.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("compare-bar-active");
   }
 }
 

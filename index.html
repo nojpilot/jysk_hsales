@@ -20,19 +20,12 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="brand">
-          <div>
-            <p class="brand-kicker">JYSK</p>
-            <h1>Vinohradský buddy</h1>
+          <div class="brand-logo-container">
+            <div class="brand-logo">JYSK</div>
+            <span class="brand-title">JYSK BUDDY</span>
           </div>
         </div>
-        <div class="topbar-actions">
-          <button id="startWizardBtn" type="button" class="wizard-btn">
-            <svg class="wizard-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.982-11.795H13.5l1.5-6.75L6 14.25h4.813z"/>
-            </svg>
-            Průvodce výběrem
-          </button>
-        </div>
+
       </header>
 
       <main>
@@ -104,9 +97,8 @@
           <section class="catalog-panel" aria-label="Seznam produktů">
             <div class="section-head">
               <div>
-                <p class="eyebrow">Katalog</p>
-                <h2 id="catalogTitle">Produkty</h2>
-                <p class="result-count" id="catalogCount">0 položek</p>
+                <p class="eyebrow">KATALOG</p>
+                <h2><span id="catalogTitle">Produkty</span> <span class="result-count" id="catalogCount">(0 položek)</span></h2>
               </div>
             </div>
             <div class="quick-filter-strip" id="quickFilters" aria-label="Rychlé filtry"></div>
@@ -119,7 +111,11 @@
     <!-- Wizard Modal Overlay -->
     <div id="wizardModal" class="modal-overlay" aria-hidden="true">
       <div class="modal-content wizard-modal">
-        <button class="modal-close" id="closeWizardBtn" aria-label="Zavřít průvodce">&times;</button>
+        <button class="modal-close" id="closeWizardBtn" aria-label="Zavřít průvodce">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+            <path d="M1 1l12 12M13 1L1 13" />
+          </svg>
+        </button>
         <div class="wizard-header">
           <p class="eyebrow">Inteligentní Asistent</p>
           <h2>Průvodce výběrem</h2>
@@ -138,7 +134,11 @@
     <!-- Compare Modal Overlay -->
     <div id="compareModal" class="modal-overlay" aria-hidden="true">
       <div class="modal-content compare-modal">
-        <button class="modal-close" id="closeCompareBtn" aria-label="Zavřít porovnání">&times;</button>
+        <button class="modal-close" id="closeCompareBtn" aria-label="Zavřít porovnání">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+            <path d="M1 1l12 12M13 1L1 13" />
+          </svg>
+        </button>
         <div class="compare-header">
           <p class="eyebrow">Porovnání produktů</p>
           <h2>Srovnání parametrů</h2>
@@ -163,6 +163,13 @@
         </div>
       </div>
     </div>
+
+    <button id="startWizardBtn" type="button" class="wizard-btn">
+      <svg class="wizard-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l-.707.707M12 5a7 7 0 00-7 7c0 2.502 1.314 4.697 3.291 5.922a1 1 0 01.417.809v1.269a1 1 0 001 1h4.5a1 1 0 001-1V18.73a1 1 0 01.417-.809C17.686 16.697 19 14.502 19 12a7 7 0 00-7-7z"/>
+      </svg>
+      PRŮVODCE VÝBĚREM - Inteligentní Asistent
+    </button>
 
     <script src="data/catalog.js"></script>
     <script src="app.js"></script>
