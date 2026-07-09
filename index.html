@@ -1,177 +1,183 @@
 <!doctype html>
 <html lang="cs">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#143c8a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="JYSK Buddy">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23143c8a' width='180' height='180' rx='40'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='130' width='180' height='50' fill='%23ffd43b'/></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%23143c8a' width='180' height='180' rx='40'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='100' font-weight='800' fill='white' font-family='system-ui'>J</text><rect x='0' y='130' width='180' height='50' fill='%23ffd43b'/></svg>">
-    <title>JYSK prodejní asistent</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-logo-container">
-            <div class="brand-logo">JYSK</div>
-            <span class="brand-title">JYSK BUDDY</span>
-          </div>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#143c8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JYSK Buddy">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>JYSK prodejní asistent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-logo-container">
+          <img class="brand-logo" src="assets/logo.jpg" alt="JYSK Logo">
+          <span class="brand-title">JYSK BUDDY</span>
         </div>
+      </div>
 
-      </header>
+    </header>
 
-      <main>
-        <!-- Mobile FAB to open filters drawer -->
-        <button id="mobileFilterToggle" class="mobile-filter-fab" type="button" aria-label="Otevřít filtry">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.874c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
-          </svg>
-          Filtrovat
-        </button>
+    <main>
 
-        <div id="filtersBackdrop" class="filters-backdrop"></div>
 
-        <section id="filtersSection" class="filters" aria-label="Filtry katalogu">
-          <div class="filters-top-bar">
-            <span class="control-label">Parametry</span>
-            <button id="resetFiltersBtn" type="button" class="reset-btn">Resetovat vše</button>
-          </div>
-          <div class="control-block search-control">
-            <label class="search-box">
-              <span>Rychlé hledání</span>
-              <input id="searchInput" type="search" autocomplete="off" placeholder="název, SKU, paměť, batist">
+      <div id="filtersBackdrop" class="filters-backdrop"></div>
+
+      <section id="filtersSection" class="filters" aria-label="Filtry katalogu">
+        <div class="filters-top-bar">
+          <span class="control-label">Parametry</span>
+          <button id="resetFiltersBtn" type="button" class="reset-btn">Resetovat vše</button>
+        </div>
+        <div class="control-block search-control">
+          <label class="search-box">
+            <span>Rychlé hledání</span>
+            <input id="searchInput" type="search" autocomplete="off" placeholder="název, Art., paměť, batist">
+          </label>
+        </div>
+        <div class="control-block">
+          <span class="control-label">Typ</span>
+          <div class="segmented" id="typeTabs"></div>
+        </div>
+        <div class="control-block">
+          <span class="control-label">Třída</span>
+          <div class="segmented segmented-quality" id="qualityTabs"></div>
+        </div>
+        <div class="control-block customer-block">
+          <span class="control-label">Zákazník</span>
+          <div class="mini-controls">
+            <label>
+              <span>Poloha</span>
+              <select id="sleepSelect">
+                <option value="side">Bok</option>
+                <option value="back">Záda</option>
+                <option value="stomach">Břicho</option>
+              </select>
+            </label>
+            <label>
+              <span>Polštář</span>
+              <select id="pillowFamilySelect">
+                <option value="classic">Klasický</option>
+                <option value="memory">Paměťová pěna</option>
+                <option value="all">Bez rozdílu</option>
+              </select>
+            </label>
+            <label>
+              <span>Teplo</span>
+              <select id="warmthSelect">
+                <option value="warm">Teplá</option>
+                <option value="cool">Chladivá</option>
+                <option value="extra">Extra teplá</option>
+              </select>
+            </label>
+            <label class="toggle">
+              <input id="allergyToggle" type="checkbox">
+              <span>Alergie</span>
             </label>
           </div>
-          <div class="control-block">
-            <span class="control-label">Typ</span>
-            <div class="segmented" id="typeTabs"></div>
-          </div>
-          <div class="control-block">
-            <span class="control-label">Třída</span>
-            <div class="segmented segmented-quality" id="qualityTabs"></div>
-          </div>
-          <div class="control-block customer-block">
-            <span class="control-label">Zákazník</span>
-            <div class="mini-controls">
-              <label>
-                <span>Poloha</span>
-                <select id="sleepSelect">
-                  <option value="side">Bok</option>
-                  <option value="back">Záda</option>
-                  <option value="stomach">Břicho</option>
-                </select>
-              </label>
-              <label>
-                <span>Polštář</span>
-                <select id="pillowFamilySelect">
-                  <option value="classic">Klasický</option>
-                  <option value="memory">Paměťová pěna</option>
-                  <option value="all">Bez rozdílu</option>
-                </select>
-              </label>
-              <label>
-                <span>Teplo</span>
-                <select id="warmthSelect">
-                  <option value="warm">Teplá</option>
-                  <option value="cool">Chladivá</option>
-                  <option value="extra">Extra teplá</option>
-                </select>
-              </label>
-              <label class="toggle">
-                <input id="allergyToggle" type="checkbox">
-                <span>Alergie</span>
-              </label>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="catalog-panel" aria-label="Seznam produktů">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">KATALOG</p>
+              <h2><span id="catalogTitle">Produkty</span> <span class="result-count" id="catalogCount">(0
+                  položek)</span></h2>
             </div>
           </div>
+          <div class="quick-filter-strip" id="quickFilters" aria-label="Rychlé filtry"></div>
+          <div class="product-list" id="productList"></div>
         </section>
+      </section>
+    </main>
+  </div>
 
-        <section class="workspace">
-          <section class="catalog-panel" aria-label="Seznam produktů">
-            <div class="section-head">
-              <div>
-                <p class="eyebrow">KATALOG</p>
-                <h2><span id="catalogTitle">Produkty</span> <span class="result-count" id="catalogCount">(0 položek)</span></h2>
-              </div>
-            </div>
-            <div class="quick-filter-strip" id="quickFilters" aria-label="Rychlé filtry"></div>
-            <div class="product-list" id="productList"></div>
-          </section>
-        </section>
-      </main>
+  <!-- Wizard Modal Overlay -->
+  <div id="wizardModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content wizard-modal">
+      <button class="modal-close" id="closeWizardBtn" aria-label="Zavřít průvodce">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+          <path d="M1 1l12 12M13 1L1 13" />
+        </svg>
+      </button>
+      <div class="wizard-header">
+        <p class="eyebrow">Inteligentní Asistent</p>
+        <h2>Průvodce výběrem</h2>
+        <div class="wizard-progress-bar">
+          <div id="wizardProgress" style="width: 25%;"></div>
+        </div>
+      </div>
+      <div id="wizardStepContent" class="wizard-body">
+        <!-- Steps will be injected dynamically -->
+      </div>
+      <div class="wizard-footer">
+        <button id="wizardBackBtn" class="secondary-button">Zpět</button>
+        <button id="wizardNextBtn" class="action-button">Pokračovat</button>
+      </div>
     </div>
+  </div>
 
-    <!-- Wizard Modal Overlay -->
-    <div id="wizardModal" class="modal-overlay" aria-hidden="true">
-      <div class="modal-content wizard-modal">
-        <button class="modal-close" id="closeWizardBtn" aria-label="Zavřít průvodce">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
-            <path d="M1 1l12 12M13 1L1 13" />
-          </svg>
-        </button>
-        <div class="wizard-header">
-          <p class="eyebrow">Inteligentní Asistent</p>
-          <h2>Průvodce výběrem</h2>
-          <div class="wizard-progress-bar"><div id="wizardProgress" style="width: 25%;"></div></div>
-        </div>
-        <div id="wizardStepContent" class="wizard-body">
-          <!-- Steps will be injected dynamically -->
-        </div>
-        <div class="wizard-footer">
-          <button id="wizardBackBtn" class="secondary-button">Zpět</button>
-          <button id="wizardNextBtn" class="action-button">Pokračovat</button>
+  <!-- Compare Modal Overlay -->
+  <div id="compareModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content compare-modal">
+      <button class="modal-close" id="closeCompareBtn" aria-label="Zavřít porovnání">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+          <path d="M1 1l12 12M13 1L1 13" />
+        </svg>
+      </button>
+      <div class="compare-header">
+        <p class="eyebrow">Porovnání produktů</p>
+        <h2>Srovnání parametrů</h2>
+      </div>
+      <div class="compare-body">
+        <div class="table-responsive">
+          <table id="compareTable">
+            <!-- Injected dynamically -->
+          </table>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Compare Modal Overlay -->
-    <div id="compareModal" class="modal-overlay" aria-hidden="true">
-      <div class="modal-content compare-modal">
-        <button class="modal-close" id="closeCompareBtn" aria-label="Zavřít porovnání">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
-            <path d="M1 1l12 12M13 1L1 13" />
-          </svg>
-        </button>
-        <div class="compare-header">
-          <p class="eyebrow">Porovnání produktů</p>
-          <h2>Srovnání parametrů</h2>
-        </div>
-        <div class="compare-body">
-          <div class="table-responsive">
-            <table id="compareTable">
-              <!-- Injected dynamically -->
-            </table>
-          </div>
-        </div>
+  <!-- Sticky Compare Bar -->
+  <div id="compareBar" class="compare-bar" aria-hidden="true">
+    <div class="compare-bar-content">
+      <span id="compareCountText">Vybráno k porovnání: 0 produktů (max 3)</span>
+      <div class="compare-bar-actions">
+        <button id="clearCompareBtn" class="secondary-button">Zrušit</button>
+        <button id="startCompareBtn" class="action-button">Srovnat parametry</button>
       </div>
     </div>
+  </div>
 
-    <!-- Sticky Compare Bar -->
-    <div id="compareBar" class="compare-bar" aria-hidden="true">
-      <div class="compare-bar-content">
-        <span id="compareCountText">Vybráno k porovnání: 0 produktů (max 3)</span>
-        <div class="compare-bar-actions">
-          <button id="clearCompareBtn" class="secondary-button">Zrušit</button>
-          <button id="startCompareBtn" class="action-button">Srovnat parametry</button>
-        </div>
-      </div>
-    </div>
+  <button id="startWizardBtn" type="button" class="wizard-btn">
+    <svg class="wizard-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+      viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l-.707.707M12 5a7 7 0 00-7 7c0 2.502 1.314 4.697 3.291 5.922a1 1 0 01.417.809v1.269a1 1 0 001 1h4.5a1 1 0 001-1V18.73a1 1 0 01.417-.809C17.686 16.697 19 14.502 19 12a7 7 0 00-7-7z" />
+    </svg>
+    PRŮVODCE VÝBĚREM
+  </button>
 
-    <button id="startWizardBtn" type="button" class="wizard-btn">
-      <svg class="wizard-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l-.707.707M12 5a7 7 0 00-7 7c0 2.502 1.314 4.697 3.291 5.922a1 1 0 01.417.809v1.269a1 1 0 001 1h4.5a1 1 0 001-1V18.73a1 1 0 01.417-.809C17.686 16.697 19 14.502 19 12a7 7 0 00-7-7z"/>
-      </svg>
-      PRŮVODCE VÝBĚREM - Inteligentní Asistent
-    </button>
+  <script src="data/catalog.js"></script>
+  <script src="app.js"></script>
+</body>
 
-    <script src="data/catalog.js"></script>
-    <script src="app.js"></script>
-  </body>
 </html>

@@ -72,7 +72,7 @@ const state = {
   search: "",
   selectedId: null,
   expandedId: null,
-  
+
   // New redesign state
   compareIds: [],
   isWizardOpen: false,
@@ -83,43 +83,43 @@ const state = {
 
 const elements = canRenderApp
   ? {
-      typeTabs: document.querySelector("#typeTabs"),
-      qualityTabs: document.querySelector("#qualityTabs"),
-      sleepSelect: document.querySelector("#sleepSelect"),
-      pillowFamilySelect: document.querySelector("#pillowFamilySelect"),
-      warmthSelect: document.querySelector("#warmthSelect"),
-      allergyToggle: document.querySelector("#allergyToggle"),
-      searchInput: document.querySelector("#searchInput"),
-      productList: document.querySelector("#productList"),
-      catalogTitle: document.querySelector("#catalogTitle"),
-      catalogCount: document.querySelector("#catalogCount"),
-      quickFilters: document.querySelector("#quickFilters"),
-      metricProducts: document.querySelector("#metricProducts"),
-      
-      // Wizard elements
-      startWizardBtn: document.querySelector("#startWizardBtn"),
-      closeWizardBtn: document.querySelector("#closeWizardBtn"),
-      wizardModal: document.querySelector("#wizardModal"),
-      wizardStepContent: document.querySelector("#wizardStepContent"),
-      wizardBackBtn: document.querySelector("#wizardBackBtn"),
-      wizardNextBtn: document.querySelector("#wizardNextBtn"),
-      wizardProgress: document.querySelector("#wizardProgress"),
-      
-      // Comparison elements
-      closeCompareBtn: document.querySelector("#closeCompareBtn"),
-      compareModal: document.querySelector("#compareModal"),
-      compareTable: document.querySelector("#compareTable"),
-      compareBar: document.querySelector("#compareBar"),
-      compareCountText: document.querySelector("#compareCountText"),
-      clearCompareBtn: document.querySelector("#clearCompareBtn"),
-      startCompareBtn: document.querySelector("#startCompareBtn"),
-      
-      // Reset & Mobile Drawer elements
-      resetFiltersBtn: document.querySelector("#resetFiltersBtn"),
-      mobileFilterToggle: document.querySelector("#mobileFilterToggle"),
-      filtersSection: document.querySelector("#filtersSection"),
-      filtersBackdrop: document.querySelector("#filtersBackdrop"),
-    }
+    typeTabs: document.querySelector("#typeTabs"),
+    qualityTabs: document.querySelector("#qualityTabs"),
+    sleepSelect: document.querySelector("#sleepSelect"),
+    pillowFamilySelect: document.querySelector("#pillowFamilySelect"),
+    warmthSelect: document.querySelector("#warmthSelect"),
+    allergyToggle: document.querySelector("#allergyToggle"),
+    searchInput: document.querySelector("#searchInput"),
+    productList: document.querySelector("#productList"),
+    catalogTitle: document.querySelector("#catalogTitle"),
+    catalogCount: document.querySelector("#catalogCount"),
+    quickFilters: document.querySelector("#quickFilters"),
+    metricProducts: document.querySelector("#metricProducts"),
+
+    // Wizard elements
+    startWizardBtn: document.querySelector("#startWizardBtn"),
+    closeWizardBtn: document.querySelector("#closeWizardBtn"),
+    wizardModal: document.querySelector("#wizardModal"),
+    wizardStepContent: document.querySelector("#wizardStepContent"),
+    wizardBackBtn: document.querySelector("#wizardBackBtn"),
+    wizardNextBtn: document.querySelector("#wizardNextBtn"),
+    wizardProgress: document.querySelector("#wizardProgress"),
+
+    // Comparison elements
+    closeCompareBtn: document.querySelector("#closeCompareBtn"),
+    compareModal: document.querySelector("#compareModal"),
+    compareTable: document.querySelector("#compareTable"),
+    compareBar: document.querySelector("#compareBar"),
+    compareCountText: document.querySelector("#compareCountText"),
+    clearCompareBtn: document.querySelector("#clearCompareBtn"),
+    startCompareBtn: document.querySelector("#startCompareBtn"),
+
+    // Reset & Mobile Drawer elements
+    resetFiltersBtn: document.querySelector("#resetFiltersBtn"),
+    mobileFilterToggle: document.querySelector("#mobileFilterToggle"),
+    filtersSection: document.querySelector("#filtersSection"),
+    filtersBackdrop: document.querySelector("#filtersBackdrop"),
+  }
   : {};
 
 function init() {
@@ -236,9 +236,9 @@ function bindEvents() {
     });
 
     elements.productList.addEventListener("click", (event) => {
-      const copyBtn = event.target.closest(".copy-sku-btn");
+      const copyBtn = event.target.closest(".copy-art-btn");
       if (copyBtn) {
-        copySkuToClipboard(copyBtn.dataset.copySku, copyBtn);
+        copyArtToClipboard(copyBtn.dataset.copyArt, copyBtn);
       }
     });
   }
@@ -376,13 +376,13 @@ function productCard(product) {
       
       <div class="card-actions">
         <button class="action-button" type="button" data-sale-product="${product.id}" aria-expanded="${isSalesOpen ? "true" : "false"}" aria-pressed="${isSalesOpen ? "true" : "false"}">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right: 8px;">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right: 6px;">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-10.5m0 0H9m5.25 0v4.5m-10.5 4.5V18m0-10.5L14.25 18M18 18h-4.5m0 0v-4.5" />
           </svg>
-          NAVRHNOUT UP-SELL & CROSS-SELL
+          NAVRHNOUT UP-SELL
         </button>
         <button class="secondary-button" type="button" data-select-product="${product.id}" aria-expanded="${isDetailOpen ? "true" : "false"}" aria-pressed="${isDetailOpen ? "true" : "false"}">
-          VÍCE INFORMACÍ A RADY
+          VÍCE INFORMACÍ
         </button>
       </div>
 
@@ -402,9 +402,9 @@ function expandedProductPanel(product) {
       <div class="inline-panel-head">
         <div class="detail-tags" style="margin-top: 0;">
           <span class="tag">${product.typeLabel}</span>
-          <span class="tag sku-container">
-            SKU ${product.sku}
-            <button class="copy-sku-btn" data-copy-sku="${product.sku}">Kopírovat</button>
+          <span class="tag art-container">
+            Art. ${product.sku}
+            <button class="copy-art-btn" data-copy-art="${product.sku}">Kopírovat</button>
           </span>
           ${sourceLink(product)}
         </div>
@@ -424,7 +424,7 @@ function infoRow(label, value) {
 function productInfoBody(product, coverPros) {
   return `
     <dl class="info-list">
-      ${infoRow("SKU", `<span class="sku">${product.sku}</span>`)}
+      ${infoRow("Art.", `<span class="art">${product.sku}</span>`)}
       ${infoRow("Náplň", product.filling)}
       ${infoRow("Hmotnost", product.fillWeight)}
       ${infoRow("Potah", `${product.cover}${coverProsHtml(coverPros)}`)}
@@ -601,21 +601,21 @@ function renderQuickFilters() {
     state.quickFilter = "all";
   }
 
-  let htmlContent = options
-    .map((option) => {
-      return `<button type="button" data-quick-filter="${option.id}" aria-pressed="${state.quickFilter === option.id ? "true" : "false"}">${option.label}</button>`;
-    })
-    .join("");
-
-  // Add the inline Zobrazit Filtry button at the end
-  htmlContent += `
+  // Prepend the Filtrovat button as the first item
+  let htmlContent = `
     <button type="button" id="inlineFilterBtn" class="inline-filter-btn">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right: 4px;">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.874c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
       </svg>
-      Zobrazit Filtry
+      Filtrovat
     </button>
   `;
+
+  htmlContent += options
+    .map((option) => {
+      return `<button type="button" data-quick-filter="${option.id}" aria-pressed="${state.quickFilter === option.id ? "true" : "false"}">${option.label}</button>`;
+    })
+    .join("");
 
   elements.quickFilters.innerHTML = htmlContent;
 
@@ -812,9 +812,6 @@ function recommendationCard(item) {
         ${smallSpec("Třída", product.quality)}
         ${smallSpec("Rozměr", product.size)}
       </div>
-      <ul class="reason-list">
-        ${item.reasons.slice(0, 3).map((reason) => `<li>${reason}</li>`).join("")}
-      </ul>
     </article>
   `;
 }
@@ -969,7 +966,7 @@ function renderCompareTable() {
 
   const specs = [
     { key: "typeLabel", label: "Typ" },
-    { key: "sku", label: "SKU" },
+    { key: "sku", label: "Art." },
     { key: "size", label: "Rozměry" },
     { key: "height", label: "Výška / Hřejivost", custom: p => p.warmth || p.height || "-" },
     { key: "filling", label: "Náplň" },
@@ -997,10 +994,10 @@ function renderCompareTable() {
   });
 }
 
-function copySkuToClipboard(sku, buttonElement) {
+function copyArtToClipboard(art, buttonElement) {
   if (!navigator.clipboard) {
     const textArea = document.createElement("textarea");
-    textArea.value = sku;
+    textArea.value = art;
     document.body.appendChild(textArea);
     textArea.select();
     try {
@@ -1012,22 +1009,22 @@ function copySkuToClipboard(sku, buttonElement) {
     document.body.removeChild(textArea);
     return;
   }
-  navigator.clipboard.writeText(sku).then(() => {
+  navigator.clipboard.writeText(art).then(() => {
     showCopyFeedback(buttonElement);
   }, (err) => {
-    console.error("Chyba při kopírování SKU: ", err);
+    console.error("Chyba při kopírování Art.: ", err);
   });
 }
 
 function showCopyFeedback(btn) {
   const existing = btn.querySelector(".copy-feedback");
   if (existing) existing.remove();
-  
+
   const feedback = document.createElement("span");
   feedback.className = "copy-feedback";
   feedback.textContent = "Zkopírováno!";
   btn.appendChild(feedback);
-  
+
   setTimeout(() => {
     feedback.remove();
   }, 1000);
@@ -1166,13 +1163,13 @@ function renderWizardStep() {
 function navigateWizard(direction) {
   const activeSteps = getActiveWizardSteps();
   const nextIndex = state.wizardStep + direction;
-  
+
   if (nextIndex < 0) return;
   if (nextIndex >= activeSteps.length) {
     applyWizardResults();
     return;
   }
-  
+
   state.wizardStep = nextIndex;
   renderWizardStep();
 }
@@ -1191,7 +1188,7 @@ function applyWizardResults() {
   }
   state.allergy = answers.allergy === "yes";
   if (elements.allergyToggle) elements.allergyToggle.checked = state.allergy;
-  
+
   selectFirstVisibleProduct();
   closeWizard();
   render();
