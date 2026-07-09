@@ -116,7 +116,6 @@ const elements = canRenderApp
 
     // Reset & Mobile Drawer elements
     resetFiltersBtn: document.querySelector("#resetFiltersBtn"),
-    mobileFilterToggle: document.querySelector("#mobileFilterToggle"),
     filtersSection: document.querySelector("#filtersSection"),
     filtersBackdrop: document.querySelector("#filtersBackdrop"),
   }
@@ -168,13 +167,7 @@ function bindEvents() {
     });
   }
 
-  // Mobile Filter Drawer Toggle
-  if (elements.mobileFilterToggle) {
-    elements.mobileFilterToggle.addEventListener("click", () => {
-      state.isMobileFiltersOpen = true;
-      renderMobileFilters();
-    });
-  }
+
 
   if (elements.filtersBackdrop) {
     elements.filtersBackdrop.addEventListener("click", () => {

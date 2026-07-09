@@ -1575,40 +1575,6 @@ body.compare-bar-active .wizard-btn {
     margin-bottom: 8px;
   }
 
-  /* Mobile floating filter trigger button */
-  .mobile-filter-fab {
-    display: inline-flex !important;
-    position: fixed;
-    bottom: calc(82px + env(safe-area-inset-bottom));
-    right: 20px;
-    z-index: 800;
-    background: var(--jysk-blue);
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    min-height: 46px;
-    padding: 0 18px;
-    font-weight: 800;
-    font-size: 0.88rem;
-    box-shadow: 0 8px 24px rgba(24, 82, 192, 0.4);
-    align-items: center;
-    gap: 8px;
-    transition: bottom 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms ease;
-  }
-
-  body.compare-bar-active .mobile-filter-fab {
-    bottom: calc(148px + env(safe-area-inset-bottom));
-  }
-
-  /* Offset catalog when FAB is present */
-  .app-shell {
-    padding-bottom: 140px;
-  }
-
-  .mobile-filter-fab:active {
-    transform: scale(0.95);
-  }
-
   /* Limit specifications column width and display settings on compare table */
   #compareTable th {
     width: 90px;
@@ -1621,9 +1587,4 @@ body.compare-bar-active .wizard-btn {
     padding: 10px 8px;
     font-size: 0.78rem;
   }
-}
-
-/* Hide FAB on desktop */
-.mobile-filter-fab {
-  display: none;
 }
